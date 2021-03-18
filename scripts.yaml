@@ -1,0 +1,4 @@
+scripts:
+  benchmark: deno run --allow-env --allow-read --allow-run mod.ts
+  install: deno install --allow-env --allow-read --allow-run -f mod.ts
+  compile: deno compile --unstable --allow-env --allow-read --allow-run mod.ts
