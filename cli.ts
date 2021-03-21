@@ -1,5 +1,6 @@
 import { Program } from "https://deno.land/x/program@0.1.6/mod.ts";
 import { benchmarkCommand } from "./benchmark/command.ts";
+import { printBenchmarkResult } from "./benchmark_printer.ts";
 
 const cli = new Program({
     name: "benchmark",
@@ -44,7 +45,7 @@ cli.command({
             .map((commandSegment) => new String(commandSegment).split(" "))
             .reduce((command, newSegments) => [...command, ...newSegments], []);
 
-        console.log("Iniciando benchmark...\n");
+        console.log("Iniciando benchmark...");
 
         const benchmarkResult = await benchmarkCommand(command, {
             executions,
@@ -52,16 +53,8 @@ cli.command({
             poolSize,
         });
 
-        console.log(`Total de execuções: ${benchmarkResult.totalExecutions}`);
-        console.log(`Duração total: ${benchmarkResult.totalDurationMillis}ms`);
-        console.log(`Duração média: ${benchmarkResult.averageDurationMillis.toFixed(2)}ms`);
-        console.log(
-            `Duração da execução mais lenta: ${benchmarkResult.slowestExecutionDurationMillis}ms`
-        );
-        console.log(
-            `Duração da execução mais rápida: ${benchmarkResult.fastestExecutionDurationMillis}ms`
-        );
-        console.log("\nBenchmark finalizado!");
+        printBenchmarkResult(benchmarkResult);
+        console.log("Benchmark finalizado!");
     },
 });
 

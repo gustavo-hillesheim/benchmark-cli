@@ -3,10 +3,10 @@ export class RunResult {
 }
 
 export class BenchmarkResult {
-    totalDurationMillis = 0;
-    averageDurationMillis = 0;
-    fastestExecutionDurationMillis = 0;
-    slowestExecutionDurationMillis = 0;
+    public totalDurationMillis = 0;
+    public averageDurationMillis = 0;
+    public fastestExecutionDurationMillis = 0;
+    public slowestExecutionDurationMillis = 0;
 
     constructor(public runResults: RunResult[], public totalExecutions: number) {
         this.extractDurationData(runResults);
