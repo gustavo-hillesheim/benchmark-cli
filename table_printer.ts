@@ -1,18 +1,4 @@
-import { BenchmarkResult } from "./benchmark/commons.ts";
-
-export function printBenchmarkResult(benchmarkResult: BenchmarkResult) {
-    new TablePrinter()
-        .setHeaders("Duração total", "Duração média", "Menor duração", "Maior duração")
-        .addRow(
-            `${benchmarkResult.totalDurationMillis}ms`,
-            `${benchmarkResult.averageDurationMillis.toFixed(2)}ms`,
-            `${benchmarkResult.fastestExecutionDurationMillis}ms`,
-            `${benchmarkResult.slowestExecutionDurationMillis}ms`
-        )
-        .print();
-}
-
-class TablePrinter {
+export class TablePrinter {
     private static TOP_LEFT_CORNER = "┌";
     private static TOP_RIGHT_CORNER = "┐";
     private static BOTTOM_LEFT_CORNER = "└";
@@ -82,6 +68,7 @@ class TablePrinter {
 
     private printRows(cellSizes: number[]): void {
         for (let i = 0, l = this.rows.length; i < l; i++) {
+            const isLastRow = i === l - 1;
             const rowData = this.rows[i];
             let rowString = "";
             for (let ri = 0, rl = rowData.length; ri < rl; ri++) {
@@ -94,8 +81,8 @@ class TablePrinter {
                 }
             }
             console.log(rowString);
+            this.printRowDivider(cellSizes, { isLastRow });
         }
-        this.printRowDivider(cellSizes, { isLastRow: true });
     }
 
     private printRowDivider(

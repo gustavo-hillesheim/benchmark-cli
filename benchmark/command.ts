@@ -37,13 +37,17 @@ async function runCommand(
         stderr: "piped",
         stdout: "piped",
     });
+    const initializationTime = Date.now();
     await process.status();
     const endTime = Date.now();
     if (showReturn) {
         await logReturn(process);
     }
-    const durationMillis = endTime - startTime;
-    return new RunResult(durationMillis);
+    return new RunResult({
+        startTime: startTime,
+        endTime: endTime,
+        initializationDurationMillis: initializationTime - startTime,
+    });
 }
 
 async function logReturn(process: Deno.Process) {

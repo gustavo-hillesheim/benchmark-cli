@@ -1,5 +1,17 @@
+import { Fields } from "../types.ts";
+
 export class RunResult {
-    constructor(public durationMillis: number) {}
+    public initializationDurationMillis: number;
+    public startTime: number;
+    public endTime: number;
+    public durationMillis: number;
+
+    constructor(params: Fields<Omit<RunResult, "durationMillis">>) {
+        this.initializationDurationMillis = params.initializationDurationMillis;
+        this.startTime = params.startTime;
+        this.endTime = params.endTime;
+        this.durationMillis = params.endTime - params.startTime;
+    }
 }
 
 export class BenchmarkResult {
