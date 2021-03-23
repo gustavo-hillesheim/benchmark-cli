@@ -56,7 +56,10 @@ export class TablePrinter {
         for (let i = 0, l = this.headers.length; i < l; i++) {
             const isLastHeader = i === l - 1;
             const cellSize = cellSizes[i];
-            const header = this.addPaddingAndEmptySpace(this.headers[i], { cellSize });
+            const header = this.addPaddingAndAlignment(this.headers[i], {
+                cellSize,
+                alignment: "left",
+            });
             headersString += TablePrinter.VERTICAL_BAR + header;
             if (isLastHeader) {
                 headersString += TablePrinter.VERTICAL_BAR;
@@ -74,7 +77,9 @@ export class TablePrinter {
             for (let ri = 0, rl = rowData.length; ri < rl; ri++) {
                 const isLastCell = ri === rl - 1;
                 const cellSize = cellSizes[ri];
-                const cellValue = this.addPaddingAndEmptySpace(rowData[ri], { cellSize });
+                const cellValue = this.addPaddingAndAlignment(rowData[ri], {
+                    cellSize,
+                });
                 rowString += TablePrinter.VERTICAL_BAR + cellValue;
                 if (isLastCell) {
                     rowString += TablePrinter.VERTICAL_BAR;
@@ -138,10 +143,15 @@ export class TablePrinter {
         return TablePrinter.RIGHT_VERTICAL_DIVIDER;
     }
 
-    private addPaddingAndEmptySpace(cellValue: string, { cellSize }: { cellSize: number }): string {
-        const leftEmptySpaceSize = cellSize + TablePrinter.CELL_PADDING - cellValue.length;
+    private addPaddingAndAlignment(
+        cellValue: string,
+        { cellSize, alignment }: { cellSize: number; alignment?: "left" | "right" }
+    ): string {
+        const leftEmptySpaceSize =
+            TablePrinter.CELL_PADDING + (alignment !== "left" ? cellSize - cellValue.length : 0);
         const leftEmptySpace = new Array(leftEmptySpaceSize + 1).join(" ");
-        const rightEmptySpaceSize = TablePrinter.CELL_PADDING;
+        const rightEmptySpaceSize =
+            TablePrinter.CELL_PADDING + (alignment === "left" ? cellSize - cellValue.length : 0);
         const rightEmptySpace = new Array(rightEmptySpaceSize + 1).join(" ");
         return leftEmptySpace + cellValue + rightEmptySpace;
     }
