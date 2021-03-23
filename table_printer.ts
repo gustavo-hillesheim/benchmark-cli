@@ -28,6 +28,11 @@ export class TablePrinter {
         return this;
     }
 
+    clearRows(): TablePrinter {
+        this.rows = [];
+        return this;
+    }
+
     print(): void {
         const cellSizes = this.calculateCellsSizes();
         this.printHeaders(cellSizes);
