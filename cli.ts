@@ -1,7 +1,5 @@
 import { Program } from "https://deno.land/x/program@0.1.6/mod.ts";
-import { benchmarkCommand } from "./benchmark/command.ts";
-import { BenchmarkResult } from "./benchmark/commons.ts";
-import { TablePrinter } from "./table_printer.ts";
+import { CommandSubCommand } from "./subcommand/command.ts";
 
 const cli = new Program({
     name: "benchmark",
@@ -44,52 +42,18 @@ cli.command({
         },
     ],
     fn: async (args) => {
-        const executions = args.executions || 1;
-        const poolSize = args.poolSize || 1;
-        const showReturn = args.showReturn;
-        const detailed = args.detailed;
-        const command = (args._ as string[])
-            .map((commandSegment) => new String(commandSegment).split(" "))
-            .reduce((command, newSegments) => [...command, ...newSegments], []);
+        const executions: number = args.executions || 1;
+        const poolSize: number = args.poolSize || 1;
+        const showReturn: boolean = args.showReturn;
+        const detailed: boolean = args.detailed;
+        const command: string = (args._ as string[]).join(" ");
 
-        console.log("Iniciando benchmark...");
-
-        const benchmarkResult: BenchmarkResult = await benchmarkCommand(command, {
+        await new CommandSubCommand().execute(command, {
             executions,
-            showReturn,
             poolSize,
+            showReturn,
+            detailed,
         });
-
-        new TablePrinter()
-            .setHeaders("Duração total", "Duração média", "Menor duração", "Maior duração")
-            .addRow(
-                `${benchmarkResult.totalDurationMillis}ms`,
-                `${benchmarkResult.averageDurationMillis.toFixed(2)}ms`,
-                `${benchmarkResult.fastestExecutionDurationMillis}ms`,
-                `${benchmarkResult.slowestExecutionDurationMillis}ms`
-            )
-            .print();
-
-        if (detailed) {
-            const detailsPrinter = new TablePrinter().setHeaders(
-                "Duração",
-                "Tempo de inicialização",
-                "Início",
-                "Fim"
-            );
-            for (const runResult of benchmarkResult.runResults) {
-                detailsPrinter.addRow(
-                    `${runResult.durationMillis}ms`,
-                    `${runResult.initializationDurationMillis}ms`,
-                    `${new Date(runResult.startTime).toUTCString()}`,
-                    `${new Date(runResult.endTime).toUTCString()}`
-                );
-            }
-            console.log("Detalhes das execuções");
-            detailsPrinter.print();
-        }
-
-        console.log("Benchmark finalizado!");
     },
 });
 
