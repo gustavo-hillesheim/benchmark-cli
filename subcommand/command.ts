@@ -2,6 +2,7 @@ import { Command } from "../types.ts";
 import { TablePrinter } from "../table_printer.ts";
 import { benchmarkCommand } from "../benchmark/command.ts";
 import { BenchmarkResult } from "../benchmark/commons.ts";
+import { format as formatDate } from "https://deno.land/x/std@0.91.0/datetime/mod.ts";
 
 type CommandOptions = {
     showReturn: boolean;
@@ -54,8 +55,8 @@ export class CommandSubCommand implements Command<string, CommandOptions> {
             detailsPrinter.addRow(
                 `${runResult.durationMillis}ms`,
                 `${runResult.initializationDurationMillis}ms`,
-                `${new Date(runResult.startTime).toUTCString()}`,
-                `${new Date(runResult.endTime).toUTCString()}`
+                `${formatDate(new Date(runResult.startTime), "HH:mm:ss.SSS")}`,
+                `${formatDate(new Date(runResult.endTime), "HH:mm:ss.SSS")}`
             );
         }
         console.log("Detalhes das execuções");
